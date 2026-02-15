@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+.vscode/
+*.iml
+
+# Java/Maven
+target/
+*.log
+
+# Env
+.env

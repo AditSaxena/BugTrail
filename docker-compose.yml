@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: bugtrail-postgres
+    environment:
+      POSTGRES_DB: bugtrail
+      POSTGRES_USER: bugtrail
+      POSTGRES_PASSWORD: bugtrail
+    ports:
+      - "5432:5432"
+    volumes:
+      - bugtrail_pgdata:/var/lib/postgresql/data
+
+volumes:
+  bugtrail_pgdata:
