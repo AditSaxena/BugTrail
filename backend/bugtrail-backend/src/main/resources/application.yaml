@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bugtrail
+    username: bugtrail
+    password: bugtrail
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  graphql:
+    path: /graphql
+    graphiql:
+      enabled: true
+      path: /graphiql
+
+logging:
+  level:
+    org.hibernate.SQL: debug
