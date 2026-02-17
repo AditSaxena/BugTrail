@@ -33,6 +33,11 @@ public class Ticket {
     @Column(nullable = false)
     private Instant updatedAt = Instant.now();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assignee_id")
+    private User assignee;
+
+
     public Ticket() {}
 
     public Ticket(Project project, String title, String description) {
@@ -57,4 +62,8 @@ public class Ticket {
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
     public void setStatus(Status status) { this.status = status; }
+
+    public User getAssignee() { return assignee; }
+    public void setAssignee(User assignee) { this.assignee = assignee; }
+
 }
