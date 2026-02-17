@@ -1,3 +1,32 @@
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+}
+
+type Project {
+  id: ID!
+  name: String!
+  createdAt: String!
+}
+
+type Ticket {
+  id: ID!
+  projectId: ID!
+  title: String!
+  description: String
+  status: TicketStatus!
+  createdAt: String!
+  updatedAt: String!
+}
+
 type Query {
   ping: String!
+  projects: [Project!]!
+  tickets(projectId: ID!): [Ticket!]!
+}
+
+type Mutation {
+  createProject(name: String!): Project!
+  createTicket(projectId: ID!, title: String!, description: String): Ticket!
 }
