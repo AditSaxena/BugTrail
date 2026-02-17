@@ -4,10 +4,21 @@ enum TicketStatus {
   DONE
 }
 
+enum UserRole {
+  ADMIN
+  MEMBER
+}
+
 type Project {
   id: ID!
   name: String!
   createdAt: String!
+}
+
+type User {
+  id: ID!
+  name: String!
+  role: UserRole!
 }
 
 type Ticket {
@@ -16,17 +27,35 @@ type Ticket {
   title: String!
   description: String
   status: TicketStatus!
+  assignee: User
   createdAt: String!
   updatedAt: String!
+}
+
+type Comment {
+  id: ID!
+  ticketId: ID!
+  author: User!
+  text: String!
+  createdAt: String!
 }
 
 type Query {
   ping: String!
   projects: [Project!]!
   tickets(projectId: ID!): [Ticket!]!
+  comments(ticketId: ID!): [Comment!]!
+
+  users: [User!]!
 }
 
 type Mutation {
   createProject(name: String!): Project!
   createTicket(projectId: ID!, title: String!, description: String): Ticket!
+
+  createUser(name: String!, role: UserRole!): User!
+  assignTicket(ticketId: ID!, userId: ID!): Ticket!
+  changeStatus(ticketId: ID!, status: TicketStatus!): Ticket!
+
+  addComment(ticketId: ID!, authorId: ID!, text: String!): Comment!
 }

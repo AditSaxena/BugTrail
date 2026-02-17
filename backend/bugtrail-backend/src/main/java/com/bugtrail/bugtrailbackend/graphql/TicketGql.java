@@ -6,6 +6,7 @@ public record TicketGql(
         String title,
         String description,
         String status,
+        UserGql assignee,
         String createdAt,
         String updatedAt
 ) {}
