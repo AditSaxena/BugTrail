@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: ${KAFKA_JAAS_CONFIG}
+    consumer:
+      group-id: bugtrail-activity-consumer
+      auto-offset-reset: earliest
+    producer:
+      acks: all
+
+server:
+  port: ${PORT:8080}
