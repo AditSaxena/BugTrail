@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/client/react";
 import {
   CREATE_TICKET,
@@ -135,29 +135,35 @@ export default function ProjectPage() {
 
         <div style={{ display: "grid", gap: 10 }}>
           {tickets.map((t) => (
-            <div
+            <Link
               key={t.id}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: 10,
-                padding: 12,
-              }}
+              to={`/projects/${pid}/tickets/${t.id}`}
+              style={{ textDecoration: "none", color: "inherit" }}
             >
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: 10,
+                  border: "1px solid #ddd",
+                  borderRadius: 10,
+                  padding: 12,
+                  cursor: "pointer",
                 }}
               >
-                <strong>{t.title}</strong>
-                <span>{t.status}</span>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 10,
+                  }}
+                >
+                  <strong>{t.title}</strong>
+                  <span>{t.status}</span>
+                </div>
+                <small>
+                  Updated: {new Date(t.updatedAt).toLocaleString()}
+                  {t.assignee?.name ? ` • Assignee: ${t.assignee.name}` : ""}
+                </small>
               </div>
-              <small>
-                Updated: {new Date(t.updatedAt).toLocaleString()}
-                {t.assignee?.name ? ` • Assignee: ${t.assignee.name}` : ""}
-              </small>
-            </div>
+            </Link>
           ))}
           {tickets.length === 0 && <small>No tickets yet.</small>}
         </div>
