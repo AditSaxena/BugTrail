@@ -29,7 +29,9 @@ public class CorsConfig {
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/graphql", config);
         source.registerCorsConfiguration("/graphql/**", config);
+        source.registerCorsConfiguration("/graphiql", config);
         source.registerCorsConfiguration("/graphiql/**", config);
         return new CorsFilter(source);
     }
