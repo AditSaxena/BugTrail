@@ -40,12 +40,21 @@ type Comment {
   createdAt: String!
 }
 
+type ActivityItem {
+  id: ID!
+  projectId: ID!
+  ticketId: ID!
+  type: String!
+  message: String!
+  createdAt: String!
+}
+
 type Query {
   ping: String!
   projects: [Project!]!
   tickets(projectId: ID!): [Ticket!]!
   comments(ticketId: ID!): [Comment!]!
-
+  activityFeed(projectId: ID!): [ActivityItem!]!
   users: [User!]!
 }
 

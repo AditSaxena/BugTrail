@@ -1,5 +1,6 @@
 package com.bugtrail.bugtrailbackend.graphql;
 
+import com.bugtrail.bugtrailbackend.repo.ActivityFeedRepository;
 import com.bugtrail.bugtrailbackend.repo.CommentRepository;
 import com.bugtrail.bugtrailbackend.repo.ProjectRepository;
 import com.bugtrail.bugtrailbackend.repo.TicketRepository;
@@ -17,15 +18,18 @@ public class BugTrailQuery {
     private final TicketRepository ticketRepo;
     private final CommentRepository commentRepo;
     private final UserRepository userRepo;
+    private final ActivityFeedRepository activityRepo;
 
     public BugTrailQuery(ProjectRepository projectRepo, 
                          TicketRepository ticketRepo,
                          CommentRepository commentRepo,
-                         UserRepository userRepo) {
+                         UserRepository userRepo,
+                         ActivityFeedRepository activityRepo) {
         this.projectRepo = projectRepo;
         this.ticketRepo = ticketRepo;
         this.commentRepo = commentRepo;
         this.userRepo = userRepo;
+        this.activityRepo = activityRepo;
     }
 
     @QueryMapping
@@ -79,5 +83,19 @@ public class BugTrailQuery {
                 ))
                 .toList();
     }
+
+    @QueryMapping
+        public List<ActivityItemGql> activityFeed(@Argument Long projectId) {
+        return activityRepo.findTop50ByProjectIdOrderByCreatedAtDesc(projectId).stream()
+                .map(a -> new ActivityItemGql(
+                        a.getId(),
+                        a.getProjectId(),
+                        a.getTicketId(),
+                        a.getType().name(),
+                        a.getMessage(),
+                        a.getCreatedAt().toString()
+                ))
+                .toList();
+        }
 
 }

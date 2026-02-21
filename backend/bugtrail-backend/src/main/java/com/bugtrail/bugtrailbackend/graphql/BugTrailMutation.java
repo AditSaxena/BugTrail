@@ -8,6 +8,7 @@ import com.bugtrail.bugtrailbackend.repo.CommentRepository;
 import com.bugtrail.bugtrailbackend.repo.ProjectRepository;
 import com.bugtrail.bugtrailbackend.repo.TicketRepository;
 import com.bugtrail.bugtrailbackend.repo.UserRepository;
+import com.bugtrail.bugtrailbackend.kafka.ActivityEventPublisher;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
@@ -20,15 +21,18 @@ public class BugTrailMutation {
     private final TicketRepository ticketRepo;
     private final UserRepository userRepo;
     private final CommentRepository commentRepo;
+    private final ActivityEventPublisher publisher;
 
     public BugTrailMutation(ProjectRepository projectRepo,
                             TicketRepository ticketRepo,
                             UserRepository userRepo,
-                            CommentRepository commentRepo) {
+                            CommentRepository commentRepo,
+                            ActivityEventPublisher publisher) {
         this.projectRepo = projectRepo;
         this.ticketRepo = ticketRepo;
         this.userRepo = userRepo;
         this.commentRepo = commentRepo;
+        this.publisher = publisher;
     }
 
     @MutationMapping
@@ -51,6 +55,8 @@ public class BugTrailMutation {
                 .orElseThrow(() -> new IllegalArgumentException("Project not found: " + projectId));
 
         Ticket saved = ticketRepo.save(new Ticket(project, title, description));
+        publisher.publish(project.getId(), saved.getId(), "TICKET_CREATED",
+                "Ticket created: " + saved.getTitle());
         return toTicketGql(saved);
     }
 
@@ -74,6 +80,8 @@ public class BugTrailMutation {
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
 
         ticket.setAssignee(user);
+        publisher.publish(ticket.getProject().getId(), ticket.getId(), "ASSIGNED",
+        "Assigned to: " + user.getName());
         return toTicketGql(ticket);
     }
 
@@ -84,6 +92,8 @@ public class BugTrailMutation {
                 .orElseThrow(() -> new IllegalArgumentException("Ticket not found: " + ticketId));
 
         ticket.setStatus(Ticket.Status.valueOf(status));
+        publisher.publish(ticket.getProject().getId(), ticket.getId(), "STATUS_CHANGED",
+        "Status changed to: " + ticket.getStatus().name());
         return toTicketGql(ticket);
     }
 
@@ -97,6 +107,8 @@ public class BugTrailMutation {
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + authorId));
 
         Comment saved = commentRepo.save(new Comment(ticket, author, text));
+        publisher.publish(ticket.getProject().getId(), ticket.getId(), "COMMENT_ADDED",
+        "Comment added by " + author.getName());
         return new CommentGql(
                 saved.getId(),
                 ticket.getId(),
