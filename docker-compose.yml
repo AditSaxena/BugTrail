@@ -18,7 +18,7 @@ services:
       - "9092:9092"
     environment:
       # KRaft mode
-      CLUSTER_ID: "VvCe4nNUQA6-AuWuE_8lRQ"
+      CLUSTER_ID: "kSJT8oVmR5S61hdkeoCs-w"
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@bugtrail-kafka:9093
