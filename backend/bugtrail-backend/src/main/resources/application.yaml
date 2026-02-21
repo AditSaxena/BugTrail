@@ -17,6 +17,13 @@ spring:
     graphiql:
       enabled: true
       path: /graphiql
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: bugtrail-activity-consumer
+      auto-offset-reset: earliest
+    producer:
+      acks: all
 
 logging:
   level:
