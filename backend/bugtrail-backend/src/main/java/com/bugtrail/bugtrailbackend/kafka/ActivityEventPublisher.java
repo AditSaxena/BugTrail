@@ -18,18 +18,23 @@ public class ActivityEventPublisher {
     }
 
     public void publish(Long projectId, Long ticketId, String type, String message) {
-        ActivityEvent event = new ActivityEvent(
-                projectId,
-                ticketId,
-                type,
-                message,
-                Instant.now().toString()
-        );
-        try {
-        kafkaTemplate.send(TOPIC, event); // don't .get() or block
+    ActivityEvent evt = new ActivityEvent(
+            projectId,
+            ticketId,
+            type,
+            message,
+            Instant.now().toString()
+    );
+
+    try {
+        kafkaTemplate.send(TOPIC, ticketId == null ? null : ticketId.toString(), evt)
+                .whenComplete((res, ex) -> {
+                    if (ex != null) {
+                        log.error("Kafka publish failed (non-fatal): {}", ex.getMessage(), ex);
+                    }
+                });
     } catch (Exception e) {
         log.error("Kafka publish failed (non-fatal): {}", e.getMessage(), e);
     }
-        kafkaTemplate.send(TOPIC, ticketId.toString(), event);
-    }
+}
 }

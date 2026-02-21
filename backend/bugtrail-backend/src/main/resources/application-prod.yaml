@@ -17,6 +17,10 @@ spring:
       group-id: bugtrail-activity-consumer
       auto-offset-reset: earliest
     producer:
+      properties:
+        request.timeout.ms: 3000
+        delivery.timeout.ms: 4000
+        max.block.ms: 3000
       acks: all
 
 server:
