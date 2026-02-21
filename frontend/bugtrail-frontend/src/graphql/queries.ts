@@ -65,3 +65,69 @@ export const GET_ACTIVITY_FEED = gql`
     }
   }
 `;
+
+export const GET_USERS = gql`
+  query GetUsers {
+    users {
+      id
+      name
+      role
+    }
+  }
+`;
+
+export const GET_COMMENTS = gql`
+  query GetComments($ticketId: ID!) {
+    comments(ticketId: $ticketId) {
+      id
+      text
+      createdAt
+      author {
+        id
+        name
+        role
+      }
+    }
+  }
+`;
+
+export const ADD_COMMENT = gql`
+  mutation AddComment($ticketId: ID!, $authorId: ID!, $text: String!) {
+    addComment(ticketId: $ticketId, authorId: $authorId, text: $text) {
+      id
+      text
+      createdAt
+      author {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const CHANGE_STATUS = gql`
+  mutation ChangeStatus($ticketId: ID!, $status: TicketStatus!) {
+    changeStatus(ticketId: $ticketId, status: $status) {
+      id
+      status
+      updatedAt
+      assignee {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const ASSIGN_TICKET = gql`
+  mutation AssignTicket($ticketId: ID!, $userId: ID!) {
+    assignTicket(ticketId: $ticketId, userId: $userId) {
+      id
+      updatedAt
+      assignee {
+        id
+        name
+      }
+    }
+  }
+`;
