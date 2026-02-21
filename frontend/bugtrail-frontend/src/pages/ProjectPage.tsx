@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/client/react";
 import {
@@ -47,7 +47,7 @@ type CreateTicketVars = {
 
 export default function ProjectPage() {
   const { projectId } = useParams();
-  console.log("projectId param =", projectId);
+
   const pid = projectId ?? "";
 
   const [title, setTitle] = useState("");
@@ -61,8 +61,18 @@ export default function ProjectPage() {
   const feedQ = useQuery<GetFeedData, GetFeedVars>(GET_ACTIVITY_FEED, {
     variables: { projectId: pid },
     skip: !pid,
-    pollInterval: 2000,
+    pollInterval: 0,
+    fetchPolicy: "network-only",
   });
+
+  useEffect(() => {
+    if (!feedQ.error && feedQ.data) {
+      const id = setInterval(() => {
+        feedQ.refetch().catch(() => {});
+      }, 2000);
+      return () => clearInterval(id);
+    }
+  }, [feedQ.data, feedQ.error]);
 
   const [createTicket, { loading: creating }] = useMutation<
     CreateTicketData,

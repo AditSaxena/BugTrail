@@ -1,5 +1,6 @@
 package com.bugtrail.bugtrailbackend.kafka;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -7,7 +8,7 @@ import java.time.Instant;
 
 @Service
 public class ActivityEventPublisher {
-
+    private static final Logger log = LoggerFactory.getLogger(ActivityEventPublisher.class);
     public static final String TOPIC = "bugtrail.activity.v1";
 
     private final KafkaTemplate<String, ActivityEvent> kafkaTemplate;
@@ -24,6 +25,11 @@ public class ActivityEventPublisher {
                 message,
                 Instant.now().toString()
         );
+        try {
+        kafkaTemplate.send(TOPIC, event); // don't .get() or block
+    } catch (Exception e) {
+        log.error("Kafka publish failed (non-fatal): {}", e.getMessage(), e);
+    }
         kafkaTemplate.send(TOPIC, ticketId.toString(), event);
     }
 }
