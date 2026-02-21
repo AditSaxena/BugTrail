@@ -18,7 +18,7 @@ spring:
       enabled: true
       path: /graphiql
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
       group-id: bugtrail-activity-consumer
       auto-offset-reset: earliest
