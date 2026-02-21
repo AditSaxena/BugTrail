@@ -51,11 +51,13 @@ export default function ProjectsPage() {
             key={p.id}
             to={`/projects/${p.id}`}
             style={{
+              display: "block",
               border: "1px solid #ddd",
               borderRadius: 10,
               padding: 12,
               textDecoration: "none",
               color: "inherit",
+              cursor: "pointer",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between" }}>

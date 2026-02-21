@@ -1,6 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import ProjectsPage from "./pages/ProjectsPage";
-import ProjectPage from "./pages/ProjectsPage";
+import ProjectPage from "./pages/ProjectPage";
 
 export default function App() {
   return (
@@ -20,6 +20,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<ProjectsPage />} />
         <Route path="/projects/:projectId" element={<ProjectPage />} />
+        <Route path="*" element={<p>404: route not found</p>} />
       </Routes>
     </div>
   );
