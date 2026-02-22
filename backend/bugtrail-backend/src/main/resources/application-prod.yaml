@@ -21,6 +21,7 @@ spring:
         request.timeout.ms: 3000
         delivery.timeout.ms: 4000
         max.block.ms: 3000
+        retries: 0
       acks: all
 
 server:
